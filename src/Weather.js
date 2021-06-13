@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import "./Weather.css";
 import axios from "axios";
+import WeatherInfo from "./WeatherInfo";
+import WeatherForecast from "./WeatherForecast";
 
 export default function Weather(props) {
     const [weatherData, setWeatherData ] = useState({ready: false});
     const [city, setCity] = useState(props.defaultCity);
     function handleResponse(response) {
-        console.log(response.data);
         setWeatherData({
             ready: true,
-            humidity: response.data.humidity,
+            coordinates: response.data.coord,
             temperature: response.data.main.temp,
-            wind: response.data.main.wind.speed,
-            city: response.data.name,
+            humidity: response.data.main.humidity,
+            date: new Date(response.data.dt * 1000),
             description: response.data.weather[0].description,
-            iconUrl: "https://ssl.gstatic.com/onebox/weather/64/sunny.png",
-            date: "Thursday 08:00 pm",
+            icon: response.data.weather[0].icon,
+            wind: response.data.wind.speed,
+            city: response.data.name,
         });
     }
 
@@ -30,14 +32,14 @@ export default function Weather(props) {
 
     function search() {
         const apiKey = "67530174dacc3fcebbae46692eea5dd9";
-        let apiUrl = `https://www.api.openweathermap.org/data/2.5/weather?id=${city}&appid=${apiKey}&units=metric`;
+        let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
         axios.get(apiUrl).then(handleResponse);
     }
 
     if (weatherData.ready) {
         return (
             <div className="Weather">
-                <form onSubmit={handleSubmit    }>
+                <form onSubmit={handleSubmit}>
                     <div className="row">
                         <div className="col-9">
                             <input type="search" placeholder="Enter a city" className="form-control" autoFocus="on" onChange={handleCityChange}/>
@@ -47,33 +49,9 @@ export default function Weather(props) {
                         </div>
                     </div>
                 </form>
-            
-                <h1>{weatherData.city}</h1>
-                <ul>
-                    <li>{weatherData.date}</li>
-                    <li className="text-capitalize"> {weatherData.description} </li>
-                </ul>
-            
-                <div className="row mt-3">
-                    <div className="col-6">
-                        <div className="clearfix">
-                            <img src={weatherData.iconUrl} alt={weatherData.description} className="float-left"/>
-                            <span className="temperature">{Math.round(weatherData.temperature)}</span><span className="unit">ºC</span> 
-                        </div>
-                    </div>
-                    <div className="col-6">
-                        <ul>
-                            
-                            <li>Humidity: {weatherData.humidity}%</li>
-                            <li>Wind:{weatherData.wind}mph</li>
-                        </ul>
-                    </div>
-                </div>
-            
+                <WeatherInfo data={weatherData} />
+                <WeatherForecast coordinates={weatherData.coordinates} />
             </div>
         );
-    } else {
-        search();
-        return "Loading...";
     }
 }
