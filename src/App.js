@@ -8,7 +8,7 @@ export default function App() {
       <div className="container">
       <Weather defaultCity="New York"/>
       <footer>
-        Projected created by <strong>Natalia Guardia</strong> and is {" "}
+        Project created by <strong>Natalia Guardia</strong> and is {" "}
         <a href="https://www.github.com/natelba/final-weather-react" target="_blank" rel="noreferrer">
         Open-Sourced
         </a>.
