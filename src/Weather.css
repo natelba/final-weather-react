@@ -62,3 +62,15 @@
 .Weather {
     background-color: cornsilk;
 }
+
+.WeatherTemperature .temperature {
+    position: relative;
+    top: -72px;
+    left: 72px;
+}
+
+.WeatherTemperature .unit {
+    position: relative;
+    top: -102px;
+    left: 72px;
+}
